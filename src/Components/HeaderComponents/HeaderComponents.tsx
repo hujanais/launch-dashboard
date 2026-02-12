@@ -1,29 +1,13 @@
-import { IconButton, Typography } from '@mui/material'
+import { Box, Button, IconButton, Typography } from '@mui/material'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import MenuIcon from '@mui/icons-material/Menu'
-import { useEffect, useState } from 'react'
 
 const HeaderComponents = () => {
-    const [currentTime, setCurrentTime] = useState(
-        new Date().toLocaleTimeString()
-    )
-
-    const [lastUpdateTime, setLastUpdateTime] = useState(
-        new Date().toLocaleTimeString()
-    )
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentTime(new Date().toLocaleTimeString())
-        }, 1000)
-        return () => clearInterval(interval)
-    }, [])
-
     return (
         <div>
             <AppBar position="static">
-                <Toolbar>
+                <Toolbar disableGutters>
                     <IconButton
                         size="large"
                         edge="start"
@@ -34,9 +18,13 @@ const HeaderComponents = () => {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                        Launch
+                        XXX
                     </Typography>
-                    <Typography>Last Updated: {lastUpdateTime}</Typography>
+                    <Box sx={{ typography: 'body1', ml: 2 }}>
+                        <Button href="/iss">ISS</Button>
+                        <Button href="/nasa">Nasa</Button>
+                        <Button href="/launch">Launch</Button>
+                    </Box>
                 </Toolbar>
             </AppBar>
         </div>
