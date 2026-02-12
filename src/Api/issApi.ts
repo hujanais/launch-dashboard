@@ -14,8 +14,19 @@ export const useIssHook = () => {
     const [isPaused, setIsPaused] = useState(false)
 
     const fetchIss = async (): Promise<IssResponse> => {
-        const response = await fetch('http://api.open-notify.org/iss-now.json')
-        return response.json()
+        try {
+            const response = await fetch(
+                'http://api.open-notify.org/iss-now.json'
+            )
+            return response.json()
+        } catch (error) {
+            console.log(error)
+            return {
+                timestamp: 0,
+                message: 'error',
+                iss_position: { latitude: 0, longitude: 0 },
+            }
+        }
     }
 
     const issQuery = useQuery({

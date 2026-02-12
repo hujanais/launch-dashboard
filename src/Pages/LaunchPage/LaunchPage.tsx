@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useLaunchHook } from '../../Api/launchApi'
 
 export const LaunchPage = () => {
-  return (
-    <div>LaunchPage</div>
-  )
+    const { launchQuery } = useLaunchHook()
+
+    useEffect(() => {
+        launchQuery.refetch()
+    }, [])
+
+    return <div></div>
 }
