@@ -1,4 +1,5 @@
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
 
 export interface LaunchResponse {
     count: number
@@ -47,11 +48,13 @@ export interface LaunchServiceProvider {
     type: string
 }
 
-export const useLaunchHook = () => {
-    const fetchNextLaunch = async (): Promise<LaunchResponse> => {
+export const useLaunchHook = (page: number) => {
+    const fetchGoForLaunch = async (): Promise<LaunchResponse> => {
         try {
             const response = await fetch(
-                'https://ll.thespacedevs.com/2.2.0/launch/upcoming?'
+                `https://ll.thespacedevs.com/2.2.0/launch/upcoming?limit=10&offset=0&status=1&offset=${
+                    page * 10
+                }`
             )
             return response.json()
         } catch (error) {
@@ -66,8 +69,9 @@ export const useLaunchHook = () => {
     }
 
     const launchQuery = useQuery({
-        queryKey: ['launch'],
-        queryFn: fetchNextLaunch,
+        queryKey: ['goForLaunch', page],
+        queryFn: fetchGoForLaunch,
+        placeholderData: keepPreviousData,
     })
 
     return { launchQuery }
