@@ -1,52 +1,5 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
-
-export interface LaunchResponse {
-    count: number
-    next: string | null
-    previous: string | null
-    results: Launch[]
-}
-
-export interface Launch {
-    id: string
-    url: string
-    slug: string
-    name: string
-    status: Status
-    last_updated: string // ISO 8601 date-time string
-    net: string // ISO 8601 date-time string (No Earlier Than)
-    window_end: string // ISO 8601 date-time string
-    window_start: string // ISO 8601 date-time string
-    net_precision: NetPrecision
-    probability: number | null
-    weather_concerns: string | null
-    holdreason: string
-    failreason: string
-    hashtag: string | null
-    launch_service_provider: LaunchServiceProvider | null
-}
-
-export interface Status {
-    id: number
-    name: string
-    abbrev: string
-    description: string
-}
-
-export interface NetPrecision {
-    id: number
-    name: string
-    abbrev: string
-    description: string
-}
-
-export interface LaunchServiceProvider {
-    id: number
-    url: string
-    name: string
-    type: string
-}
+import type { LaunchResponse } from '../models/launch_model'
 
 export const useLaunchHook = (page: number) => {
     const fetchGoForLaunch = async (): Promise<LaunchResponse> => {

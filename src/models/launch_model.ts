@@ -1,4 +1,4 @@
-export interface LaunchData {
+export interface LaunchResponse {
     count: number
     next: string | null
     previous: string | null
