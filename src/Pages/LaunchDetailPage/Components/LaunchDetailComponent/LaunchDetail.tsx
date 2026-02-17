@@ -1,8 +1,9 @@
 import Button from '@mui/material/Button'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import type { LaunchResult } from '../../../../models/launch_model'
 
-export const LaunchDetail = ({ id }: { id: string }) => {
+export const LaunchDetail = ({ launch }: { launch: LaunchResult }) => {
     const navigate = useNavigate()
 
     const goBack = () => {
@@ -11,7 +12,7 @@ export const LaunchDetail = ({ id }: { id: string }) => {
 
     return (
         <div>
-            <div>{id}</div>
+            <div>{launch.id}</div>
             <div>
                 <Button onClick={() => goBack()}>Back</Button>
             </div>

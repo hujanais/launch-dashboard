@@ -13,6 +13,7 @@ export interface LaunchResult {
     status: LaunchStatus
     last_updated: string
     net: string
+    countdown_sec: number
     window_end: string
     window_start: string
     net_precision: Precision
