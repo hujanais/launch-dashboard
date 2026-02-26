@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button'
-import React from 'react'
+import styles from './LaunchDetail.module.scss'
 import { useNavigate } from 'react-router-dom'
 import type { LaunchResult } from '../../../../models/launch_model'
 
@@ -11,7 +11,7 @@ export const LaunchDetail = ({ launch }: { launch: LaunchResult }) => {
     }
 
     return (
-        <div>
+        <div className={styles.launchDetailContainer}>
             <div>{launch.id}</div>
             <div>
                 <Button onClick={() => goBack()}>Back</Button>

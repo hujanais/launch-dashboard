@@ -1,22 +1,39 @@
+import { useEffect, useState } from 'react'
 import type { IssResponse } from '../../../Api/issApi'
 import styles from './IssMap.module.scss'
+import Globe from 'react-globe.gl'
+import Button from '@mui/material/Button'
 
-type Props = {
-    track: IssResponse[]
-}
+export const IssMap = ({ lat, lon }: { lat: number; lon: number }) => {
+    const [latitude, setLatitude] = useState<number>(lat)
+    const [longitude, setLongitude] = useState<number>(lon)
 
-export const IssMap = (props: Props) => {
-    let latitude = 0
-    let longitude = 0
-    if (props && props.track.length > 0) {
-        latitude = props.track[props.track.length - 1].iss_position.latitude
-        longitude = props.track[props.track.length - 1].iss_position.longitude
+    const [pointsData, setPointsData] = useState<
+        { lat: number; lng: number; size: number }[]
+    >([])
+
+    const clearMap = () => {
+        setPointsData([])
     }
+
+    useEffect(() => {
+        setLatitude(lat)
+        setLongitude(lon)
+
+        setPointsData((prevState) => [
+            ...prevState,
+            { lat: lat, lng: lon, size: 0.5 },
+        ])
+    }, [lat, lon])
 
     return (
         <div className={styles.container}>
-            <div>{latitude}</div>
-            <div>{longitude}</div>
+            <Button onClick={clearMap}>Clear Map</Button>
+            <Globe
+                globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+                pointsData={pointsData}
+                pointAltitude={0}
+            />
         </div>
     )
 }

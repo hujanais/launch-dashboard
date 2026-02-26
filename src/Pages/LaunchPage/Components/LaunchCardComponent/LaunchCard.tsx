@@ -1,4 +1,5 @@
 import type { LaunchResult } from '../../../../models/launch_model'
+import styles from './LaunchCard.module.scss'
 import Card from '@mui/material/Card'
 import Box from '@mui/material/Box'
 import CardMedia from '@mui/material/CardMedia'
@@ -19,8 +20,7 @@ export const LaunchCard = ({
     }
 
     return (
-        <Card
-            sx={{ display: 'flex', padding: '0.2rem' }}
+        <Card className={styles.card}
             onClick={() => onClick(launch.id)}
         >
             <CardMedia

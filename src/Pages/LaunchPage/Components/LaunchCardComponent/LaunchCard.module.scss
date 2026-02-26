@@ -1,0 +1,10 @@
+.card {
+    display: flex;
+    padding: 0.2rem;
+    margin: 0.1rem;
+    cursor: pointer;
+}
+
+.card:hover {
+    border: 1px solid #ccc;
+}
