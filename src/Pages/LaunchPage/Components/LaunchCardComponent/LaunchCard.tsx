@@ -1,7 +1,6 @@
 import type { LaunchResult } from '../../../../models/launch_model'
 import styles from './LaunchCard.module.scss'
 import Card from '@mui/material/Card'
-import Box from '@mui/material/Box'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 
@@ -13,60 +12,62 @@ export const LaunchCard = ({
     onClick: (id: string) => void
 }) => {
     const convertToHHMMSS = (seconds: number) => {
-        const hours = Math.floor(seconds / 3600)
-        const minutes = Math.floor((seconds % 3600) / 60)
-        const remainingSeconds = Math.floor(seconds % 60)
-        return `${hours}h ${minutes}m ${remainingSeconds}s`
+        const sign = seconds < 0 ? '-' : ''
+        const normalizedSeconds = Math.abs(seconds)
+        const days = Math.floor(normalizedSeconds / 86400)
+        const hours = Math.floor((normalizedSeconds % 86400) / 3600)
+        const minutes = Math.floor((normalizedSeconds % 3600) / 60)
+        const remainingSeconds = Math.floor(normalizedSeconds % 60)
+
+        return `${sign}${days}d ${hours}h ${minutes}m ${remainingSeconds}s`
     }
 
     return (
-        <Card className={styles.card}
-            onClick={() => onClick(launch.id)}
-        >
+        <Card className={styles.card} onClick={() => onClick(launch.id)}>
             <CardMedia
                 component="img"
-                sx={{ width: 100 }}
+                className={styles.image}
+                sx={{
+                    width: '72px',
+                    height: '72px',
+                    minWidth: '72px',
+                    flex: '0 0 72px',
+                }}
                 image={launch.image}
-                alt="Live from space album cover"
+                alt={launch.name}
             />
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <div>{convertToHHMMSS(launch.countdown_sec / 1000)}</div>
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        columnGap: '1rem',
-                    }}
-                >
-                    <Typography color="green">{launch.status.name}</Typography>
-                    <Typography>
-                        {new Date(launch.net).toLocaleString()}
+            <div className={styles.content}>
+                <div className={styles.topRow}>
+                    <Typography className={styles.countdown}>
+                        T-{convertToHHMMSS(launch.countdown_sec / 1000)}
+                    </Typography>
+                    <Typography className={styles.status}>
+                        {launch.status.name}
                     </Typography>
                 </div>
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        columnGap: '1rem',
-                    }}
-                >
-                    <Typography>
+
+                <Typography className={styles.date}>
+                    {new Date(launch.net).toLocaleString()}
+                </Typography>
+
+                <div className={styles.metaRow}>
+                    <Typography className={styles.metaItem}>
                         {launch.launch_service_provider.name}
                     </Typography>
-                    <Typography>{launch.rocket.configuration.name}</Typography>
-                    <Typography>{launch.mission.name}</Typography>
+                    <Typography className={styles.metaItem}>
+                        {launch.rocket.configuration.name}
+                    </Typography>
+                    <Typography className={styles.metaItem}>
+                        {launch.mission.name}
+                    </Typography>
+                    <Typography className={styles.metaItem}>
+                        {launch.pad.country_code}
+                    </Typography>
+                    <Typography className={styles.metaItem}>
+                        {launch.pad.name}
+                    </Typography>
                 </div>
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        columnGap: '1rem',
-                    }}
-                >
-                    <Typography>{launch.pad.country_code}</Typography>
-                    <Typography>{launch.pad.name}</Typography>
-                </div>
-            </Box>
+            </div>
         </Card>
     )
 }

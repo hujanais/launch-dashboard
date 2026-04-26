@@ -1,33 +1,51 @@
 import { useEffect, useState } from 'react'
-import { Box, Button, List, ListSubheader } from '@mui/material'
+import { Box, Button, List, Typography } from '@mui/material'
 import styles from './LaunchPage.module.scss'
 import { useNavigate } from 'react-router-dom'
 import type { LaunchResponse } from '../../models/launch_model'
 import { LaunchCard } from './Components/LaunchCardComponent/LaunchCard'
-// import type { LaunchData } from '../../models/launch_model'
+import { fetchUpcomingLaunches } from '../../Api/launchApi'
 
 export const LaunchPage = () => {
-    // const [page, setPage] = useState(0)
-    // const { launchQuery } = useLaunchHook(page)
-    const [launches, setLaunches] = useState<LaunchResponse>({
-        count: 0,
-        next: null,
-        previous: null,
-        results: [],
+    const [launches, setLaunches] = useState<LaunchResponse>(() => {
+        const cachedLaunches = localStorage.getItem('launches')
+        if (cachedLaunches) {
+            return JSON.parse(cachedLaunches)
+        }
+
+        return {
+            count: 0,
+            next: null,
+            previous: null,
+            results: [],
+        }
     })
+    const [isRefreshing, setIsRefreshing] = useState(false)
     const navigate = useNavigate()
+    const nextLaunch = launches.results[0]
+
+    const formatCountdown = (milliseconds: number) => {
+        const totalSeconds = milliseconds / 1000
+        const sign = totalSeconds < 0 ? '-' : ''
+        const normalizedSeconds = Math.abs(totalSeconds)
+        const days = Math.floor(normalizedSeconds / 86400)
+        const hours = Math.floor((normalizedSeconds % 86400) / 3600)
+        const minutes = Math.floor((normalizedSeconds % 3600) / 60)
+        const seconds = Math.floor(normalizedSeconds % 60)
+
+        return `${sign}${days}d ${hours}h ${minutes}m ${seconds}s`
+    }
 
     const getLaunches = async () => {
-        const page = 0
-        const response = await fetch(
-            `https://ll.thespacedevs.com/2.2.0/launch/upcoming?limit=10&offset=0&status=1&offset=${
-                page * 10
-            }`
-        )
-
-        const launchResponse = await response.json()
-        setLaunches(launchResponse)
-        localStorage.setItem('launches', JSON.stringify(launchResponse))
+        setIsRefreshing(true)
+        try {
+            const page = 0
+            const launchResponse = await fetchUpcomingLaunches(page)
+            setLaunches(launchResponse)
+            localStorage.setItem('launches', JSON.stringify(launchResponse))
+        } finally {
+            setIsRefreshing(false)
+        }
     }
 
     const viewDetail = (id: string) => {
@@ -36,11 +54,6 @@ export const LaunchPage = () => {
     }
 
     useEffect(() => {
-        const launches = localStorage.getItem('launches')
-        if (launches) {
-            setLaunches(JSON.parse(launches))
-        }
-
         const timerObj = setInterval(() => {
             setLaunches((prevLaunchResp) => {
                 if (!prevLaunchResp?.results) {
@@ -64,19 +77,32 @@ export const LaunchPage = () => {
 
     return (
         <div className={styles.scrollableContainer}>
-            <Box sx={{ m: '1rem' }}>
+            <Box className={styles.header}>
+                <Typography variant="h5" component="h1">
+                    Upcoming Launch
+                </Typography>
+                <Typography className={styles.subHeader}>
+                    Next Launch:{' '}
+                    {nextLaunch
+                        ? `T-${formatCountdown(nextLaunch.countdown_sec)}`
+                        : 'N/A'}
+                </Typography>
                 <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => getLaunches()}
+                    variant="outlined"
+                    size="small"
+                    onClick={getLaunches}
+                    disabled={isRefreshing}
                 >
-                    Refresh
+                    {isRefreshing ? 'Refreshing...' : 'Refresh'}
                 </Button>
             </Box>
-            <List>
-                <ListSubheader>Upcoming Launches</ListSubheader>
+            <List className={styles.list}>
                 {launches.results.map((launch) => (
-                    <LaunchCard launch={launch} onClick={viewDetail} />
+                    <LaunchCard
+                        key={launch.id}
+                        launch={launch}
+                        onClick={viewDetail}
+                    />
                 ))}
             </List>
         </div>

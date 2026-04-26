@@ -1,10 +1,84 @@
 .card {
     display: flex;
-    padding: 0.2rem;
-    margin: 0.1rem;
+    flex-direction: row;
+    align-items: stretch;
+    background: #111827 !important;
+    border: 1px solid #1f2937;
+    border-radius: 14px !important;
+    margin: 0.5rem;
+    overflow: hidden;
     cursor: pointer;
+    transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
 .card:hover {
-    border: 1px solid #ccc;
+    border: 1px solid #334155;
+    transform: translateY(-1px);
+}
+
+.image {
+    width: 72px;
+    min-width: 72px;
+    height: 72px;
+    object-fit: cover;
+    margin: 0.6rem 0 0.6rem 0.6rem;
+    border-radius: 8px;
+}
+
+.content {
+    padding: 0.75rem 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.topRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.countdown {
+    color: #f8fafc;
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+}
+
+.status {
+    color: #22c55e;
+    font-size: 0.85rem !important;
+    white-space: nowrap;
+}
+
+.date {
+    color: #cbd5e1;
+    font-size: 0.85rem !important;
+}
+
+.metaRow {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.metaRow::-webkit-scrollbar {
+    display: none;
+}
+
+.metaItem {
+    color: #94a3b8;
+    font-size: 0.8rem !important;
+    border: 1px solid #334155;
+    border-radius: 999px;
+    padding: 0.15rem 0.45rem;
+    max-width: none;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
