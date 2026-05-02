@@ -13,6 +13,15 @@ import {
 } from '@mui/material'
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded'
 import { useMemo, useState } from 'react'
+import {
+    Bar,
+    BarChart,
+    CartesianGrid,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
+} from 'recharts'
 import styles from './LaunchHistoryPage.module.scss'
 import {
     fetchAgenciesByIds,
@@ -47,6 +56,22 @@ const EMPTY_PREVIOUS_LAUNCHES_RESPONSE: PreviousLaunchesResponse = {
     results: [],
 }
 
+const CHART_TOP_AGENCY_COUNT = 7
+
+const truncateAgencyLabel = (name: string, max = 14) => {
+    const t = name.trim()
+    if (t.length <= max) return t
+    return `${t.slice(0, Math.max(max - 1, 3))}\u2026`
+}
+
+type StackedDatum = {
+    name: string
+    fullLabel: string
+    launches: number
+    success: number
+    failures: number
+}
+
 const isSuccessfulLaunch = (launch: LaunchResult) => {
     const statusText =
         `${launch.status.name} ${launch.status.abbrev}`.toLowerCase()
@@ -57,6 +82,60 @@ const isFailedLaunch = (launch: LaunchResult) => {
     const statusText =
         `${launch.status.name} ${launch.status.abbrev}`.toLowerCase()
     return statusText.includes('failure') || statusText.includes('fail')
+}
+
+const buildStackedChartData = (rows: AgencyHistory[]): StackedDatum[] => {
+    if (rows.length === 0) return []
+
+    const sorted = [...rows].sort((a, b) => b.launches - a.launches)
+    const topAgencies = sorted.slice(0, CHART_TOP_AGENCY_COUNT)
+    const remainingAgencies = sorted.slice(CHART_TOP_AGENCY_COUNT)
+
+    const toDatum = (
+        label: string,
+        fullLabel: string,
+        success: number,
+        failures: number,
+        launches: number
+    ): StackedDatum => ({
+        name: label,
+        fullLabel,
+        launches,
+        success,
+        failures,
+    })
+
+    const out: StackedDatum[] = topAgencies.map((a) =>
+        toDatum(
+            truncateAgencyLabel(a.name),
+            a.name,
+            a.success,
+            a.failures,
+            a.launches
+        )
+    )
+
+    if (remainingAgencies.length > 0) {
+        let launchesSum = 0
+        let successSum = 0
+        let failureSum = 0
+        for (const m of remainingAgencies) {
+            launchesSum += m.launches
+            successSum += m.success
+            failureSum += m.failures
+        }
+        out.push(
+            toDatum(
+                'Others',
+                `All remaining agencies (${remainingAgencies.length})`,
+                successSum,
+                failureSum,
+                launchesSum
+            )
+        )
+    }
+
+    return out
 }
 
 const getCachedPreviousLaunches = (): PreviousLaunchCache | null => {
@@ -125,6 +204,11 @@ export const LaunchHistoryPage = () => {
                 },
                 { launches: 0, success: 0, failures: 0 }
             ),
+        [agencyHistory]
+    )
+
+    const stackedChartData = useMemo(
+        () => buildStackedChartData(agencyHistory),
         [agencyHistory]
     )
 
@@ -235,16 +319,177 @@ export const LaunchHistoryPage = () => {
 
             {!isRefreshing && !isError ? (
                 <div className={styles.mainRow}>
-                    <aside
-                        className={styles.graphPlaceholder}
-                        aria-label="Chart area — work in progress"
-                    >
+                    <aside className={styles.chartPanel}>
                         <Typography
                             variant="caption"
-                            className={styles.graphPlaceholderText}
+                            className={styles.chartLegendNote}
+                            component="div"
                         >
-                            Graph — coming soon
+                            Launch outcomes by agency (top{' '}
+                            {CHART_TOP_AGENCY_COUNT}; final bar aggregates the
+                            rest)
                         </Typography>
+                        {agencyHistory.length === 0 ? (
+                            <div className={styles.chartEmpty}>
+                                <Typography className={styles.chartEmptyText}>
+                                    Refresh to load chart data.
+                                </Typography>
+                            </div>
+                        ) : (
+                            <div className={styles.chartInner}>
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart
+                                        data={stackedChartData}
+                                        margin={{
+                                            top: 8,
+                                            right: 6,
+                                            left: -12,
+                                            bottom: 12,
+                                        }}
+                                        barCategoryGap={10}
+                                    >
+                                        <CartesianGrid
+                                            strokeDasharray="3 3"
+                                            stroke="rgba(51, 65, 85, 0.45)"
+                                            vertical={false}
+                                        />
+                                        <XAxis
+                                            dataKey="name"
+                                            stroke="#475569"
+                                            tick={{
+                                                fill: '#94a3b8',
+                                                fontSize: 10,
+                                            }}
+                                            angle={-32}
+                                            textAnchor="end"
+                                            interval={0}
+                                            height={68}
+                                            tickMargin={10}
+                                            tickLine={{ stroke: '#475569' }}
+                                        />
+                                        <YAxis
+                                            allowDecimals={false}
+                                            stroke="#475569"
+                                            tick={{
+                                                fill: '#94a3b8',
+                                                fontSize: 11,
+                                            }}
+                                            tickLine={{ stroke: '#475569' }}
+                                            axisLine={{ stroke: '#475569' }}
+                                            label={{
+                                                value: 'Launches',
+                                                angle: -90,
+                                                position: 'insideLeft',
+                                                offset: 8,
+                                                fill: '#64748b',
+                                                fontSize: 11,
+                                            }}
+                                        />
+                                        <Tooltip
+                                            cursor={{
+                                                fill: 'rgba(30, 41, 59, 0.35)',
+                                            }}
+                                            content={({ active, payload }) => {
+                                                if (
+                                                    !active ||
+                                                    !payload?.length
+                                                )
+                                                    return null
+                                                const first = payload[0] as {
+                                                    payload?: StackedDatum
+                                                }
+                                                const row =
+                                                    first?.payload ??
+                                                    undefined
+                                                if (!row) return null
+                                                const other = Math.max(
+                                                    0,
+                                                    row.launches -
+                                                        row.success -
+                                                        row.failures
+                                                )
+                                                return (
+                                                    <div
+                                                        className={
+                                                            styles.chartTooltip
+                                                        }
+                                                    >
+                                                        <div
+                                                            className={
+                                                                styles.chartTooltipTitle
+                                                            }
+                                                        >
+                                                            {row.fullLabel}
+                                                        </div>
+                                                        <div
+                                                            className={
+                                                                styles.chartTooltipRowMuted
+                                                            }
+                                                        >
+                                                            Total launches:{' '}
+                                                            {row.launches}
+                                                        </div>
+                                                        <div
+                                                            className={
+                                                                styles.chartTooltipRow
+                                                            }
+                                                        >
+                                                            Success:{' '}
+                                                            <span
+                                                                className={
+                                                                    styles.chartTooltipOk
+                                                                }
+                                                            >
+                                                                {row.success}
+                                                            </span>
+                                                        </div>
+                                                        <div
+                                                            className={
+                                                                styles.chartTooltipRow
+                                                            }
+                                                        >
+                                                            Failures:{' '}
+                                                            <span
+                                                                className={
+                                                                    styles.chartTooltipFail
+                                                                }
+                                                            >
+                                                                {row.failures}
+                                                            </span>
+                                                        </div>
+                                                        {other > 0 ? (
+                                                            <div
+                                                                className={
+                                                                    styles.chartTooltipRowMuted
+                                                                }
+                                                            >
+                                                                Neither counted
+                                                                as success nor
+                                                                failure: {other}
+                                                            </div>
+                                                        ) : null}
+                                                    </div>
+                                                )
+                                            }}
+                                        />
+                                        <Bar
+                                            dataKey="success"
+                                            name="Success"
+                                            stackId="stack"
+                                            fill="#34d399"
+                                            radius={[0, 0, 0, 0]}
+                                        />
+                                        <Bar
+                                            dataKey="failures"
+                                            name="Failures"
+                                            stackId="stack"
+                                            fill="#fb7185"
+                                            radius={[4, 4, 0, 0]}
+                                        />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        )}
                     </aside>
 
                     <div className={styles.tableColumn}>

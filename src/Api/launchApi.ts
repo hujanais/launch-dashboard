@@ -36,7 +36,7 @@ export const fetchUpcomingLaunches = async (
     try {
         const utcNow = encodeURIComponent(new Date().toISOString())
         const response = await fetch(
-            `https://lldev.thespacedevs.com/2.3.0/launches/upcoming/?limit=10&offset=${page * 10}&status=1&net__gte=${utcNow}`
+            `https://ll.thespacedevs.com/2.3.0/launches/upcoming/?limit=10&offset=${page * 10}&status=1&net__gte=${utcNow}`
         )
         const data: LaunchResponse = await response.json()
 
@@ -67,7 +67,7 @@ export const fetchPreviousLaunchesYearToDate = async (
 
         do {
             const response = await fetch(
-                `https://lldev.thespacedevs.com/2.3.0/launches/previous/?year=${year}&mode=normal&limit=${limit}&offset=${offset}`
+                `https://ll.thespacedevs.com/2.3.0/launches/previous/?year=${year}&mode=normal&limit=${limit}&offset=${offset}`
             )
             const data: PreviousLaunchesResponse = await response.json()
 
@@ -98,7 +98,7 @@ export const fetchAgenciesByIds = async (
 
         const uniqueAgencyIds = Array.from(new Set(agencyIds))
         const response = await fetch(
-            `https://lldev.thespacedevs.com/2.3.0/agencies/?mode=list&limit=100&id=${uniqueAgencyIds.join(',')}`
+            `https://ll.thespacedevs.com/2.3.0/agencies/?mode=list&limit=100&id=${uniqueAgencyIds.join(',')}`
         )
         const data: AgencyLookupResponse = await response.json()
 
@@ -119,7 +119,7 @@ export const fetchAgenciesByIds = async (
 export const fetchAPIThrottle = async (): Promise<APIThrottleResponse> => {
     try {
         const response = await fetch(
-            'https://lldev.thespacedevs.com/2.3.0/api-throttle/'
+            'https://ll.thespacedevs.com/2.3.0/api-throttle/'
         )
         const data: APIThrottleResponse = await response.json()
         return data

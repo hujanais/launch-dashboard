@@ -5,10 +5,12 @@
 }
 
 .scrollableContainer {
-    height: 100vh;
-    max-height: 100vh;
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
     background: radial-gradient(
             ellipse 140% 80% at 50% -20%,
             rgba(30, 58, 138, 0.22),
@@ -96,23 +98,84 @@
     align-items: stretch;
 }
 
-.graphPlaceholder {
+.chartPanel {
     flex: 1;
     min-width: 0;
     min-height: 0;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
     border-radius: 12px;
-    border: 1px dashed rgba(51, 65, 85, 0.75);
-    background: rgba(15, 23, 42, 0.35);
+    border: 1px solid rgba(51, 65, 85, 0.55);
+    background: rgba(15, 23, 42, 0.45);
+    padding: 0.5rem 0.5rem 0.35rem;
+    overflow: hidden;
 }
 
-.graphPlaceholderText {
+.chartEmpty {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chartEmptyText {
     color: #64748b !important;
-    letter-spacing: 0.12em !important;
-    text-transform: uppercase !important;
-    font-weight: 600 !important;
+    letter-spacing: 0.06em !important;
+    font-size: 0.72rem !important;
+}
+
+.chartInner {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+}
+
+.chartLegendNote {
+    margin-top: 0.35rem !important;
+    padding: 0 0.35rem !important;
+    font-size: 0.62rem !important;
+    letter-spacing: 0.06em !important;
+    color: #64748b !important;
+    text-transform: uppercase;
+}
+
+.chartTooltip {
+    padding: 0.45rem 0.55rem;
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(51, 65, 85, 0.95);
+    color: #e2e8f0;
+    font-size: 0.72rem;
+    line-height: 1.45;
+}
+
+.chartTooltipTitle {
+    font-weight: 600;
+    color: #f1f5f9;
+    margin-bottom: 0.35rem;
+    max-width: 220px;
+    word-break: break-word;
+}
+
+.chartTooltipRow {
+    color: #cbd5e1;
+}
+
+.chartTooltipRowMuted {
+    color: #64748b;
+    margin-bottom: 0.2rem;
+    font-size: 0.66rem;
+}
+
+.chartTooltipOk {
+    color: #34d399;
+    font-weight: 600;
+}
+
+.chartTooltipFail {
+    color: #fb7185;
+    font-weight: 600;
 }
 
 .tableColumn {
