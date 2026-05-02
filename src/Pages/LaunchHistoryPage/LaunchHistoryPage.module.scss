@@ -1,0 +1,171 @@
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.scrollableContainer {
+    height: 100vh;
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(
+            ellipse 140% 80% at 50% -20%,
+            rgba(30, 58, 138, 0.22),
+            transparent 55%
+        ),
+        #0b1020;
+    color: #e2e8f0;
+    overflow: hidden;
+    padding: 0.75rem 0.85rem;
+}
+
+.topBar {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid rgba(30, 41, 59, 0.85);
+}
+
+.topBarRow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.7rem;
+}
+
+.titleBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 0.08rem;
+    min-width: 0;
+}
+
+.eyebrow {
+    letter-spacing: 0.26em !important;
+    font-size: 0.62rem !important;
+    font-weight: 600 !important;
+    color: #64748b !important;
+    line-height: 1.2 !important;
+}
+
+.title {
+    font-weight: 600 !important;
+    letter-spacing: -0.03em !important;
+    font-size: 1.25rem !important;
+    color: #f1f5f9 !important;
+    line-height: 1.15 !important;
+}
+
+.refreshBtn {
+    color: #94a3b8 !important;
+    margin-top: 0.05rem !important;
+    border: 1px solid transparent;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.refreshBtn:hover:not(:disabled) {
+    color: #e2e8f0 !important;
+    border-color: rgba(51, 65, 85, 0.9);
+    background: rgba(15, 23, 42, 0.5) !important;
+}
+
+.refreshSpinning {
+    animation: spin 1s linear infinite;
+}
+
+.metaLine {
+    color: #94a3b8 !important;
+    font-size: 0.78rem !important;
+    line-height: 1.3 !important;
+}
+
+.alert {
+    margin-top: 0.6rem;
+    flex-shrink: 0;
+}
+
+.mainRow {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.6rem;
+    align-items: stretch;
+}
+
+.graphPlaceholder {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 1px dashed rgba(51, 65, 85, 0.75);
+    background: rgba(15, 23, 42, 0.35);
+}
+
+.graphPlaceholderText {
+    color: #64748b !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    font-weight: 600 !important;
+}
+
+.tableColumn {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.tableColumnAlert {
+    flex: 1 1 auto;
+    margin: 0 !important;
+    align-self: stretch;
+}
+
+.tableContainer {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    border-radius: 12px;
+    border: 1px solid rgba(51, 65, 85, 0.55);
+    background: rgba(15, 23, 42, 0.45);
+}
+
+.tableContainer :global(.MuiTable-root) {
+    min-width: 280px;
+}
+
+.tableContainer :global(.MuiTableCell-root) {
+    color: #cbd5e1;
+    border-bottom: 1px solid rgba(51, 65, 85, 0.42);
+}
+
+.tableContainer :global(.MuiTableCell-head) {
+    color: #94a3b8;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 0.68rem;
+    background: rgba(15, 23, 42, 0.95);
+}
+
+.tableContainer :global(.MuiTableRow-root:hover) {
+    background: rgba(30, 41, 59, 0.35);
+}
+
+.tableContainer::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.tableContainer::-webkit-scrollbar-thumb {
+    background: rgba(51, 65, 85, 0.8);
+    border-radius: 3px;
+}

@@ -24,6 +24,7 @@ const HeaderComponents = () => {
                         <Button href="/iss">ISS</Button>
                         <Button href="/nasa">Nasa</Button>
                         <Button href="/launch">Launch</Button>
+                        <Button href="/launch-history">Launch History</Button>
                     </Box>
                 </Toolbar>
             </AppBar>
