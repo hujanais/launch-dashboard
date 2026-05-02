@@ -53,6 +53,10 @@ export const LaunchDetailPage = () => {
         return new Date(state.net).toLocaleString()
     }, [state])
 
+    const hasWatchItems = Boolean(
+        state?.weather_concerns || state?.holdreason || state?.failreason
+    )
+
     if (!state) {
         return (
             <div className={styles.launchDetailContainer}>
@@ -86,7 +90,7 @@ export const LaunchDetailPage = () => {
                 >
                     Back
                 </Button>
-                <Typography variant="h4" className={styles.title}>
+                <Typography variant="h5" className={styles.title}>
                     {state.name}
                 </Typography>
                 <div className={styles.headerMetaRow}>
@@ -98,9 +102,14 @@ export const LaunchDetailPage = () => {
                             label={`T-${formatCountdown(countdownMs)}`}
                             color="primary"
                             variant="filled"
+                            size="small"
                         />
-                        <Chip label={state.status.name} variant="outlined" />
-                        <Chip label={state.type} variant="outlined" />
+                        <Chip
+                            label={state.status.name}
+                            variant="outlined"
+                            size="small"
+                        />
+                        <Chip label={state.type} variant="outlined" size="small" />
                     </div>
                 </div>
             </div>
@@ -115,7 +124,10 @@ export const LaunchDetailPage = () => {
                         />
                         <div className={styles.previewInfo}>
                             <div className={styles.previewInfoHeader}>
-                                <Typography variant="h6">
+                                <Typography
+                                    variant="subtitle1"
+                                    className={styles.sectionTitle}
+                                >
                                     Launch Snapshot
                                 </Typography>
                                 <Typography className={styles.timeText}>
@@ -135,54 +147,69 @@ export const LaunchDetailPage = () => {
                             </div>
                             <Divider className={styles.divider} />
                             <div className={styles.topInfoGrid}>
-                                <Box className={styles.sectionCard}>
-                                    <Typography variant="h6">
+                                <Box
+                                    className={`${styles.sectionCard} ${styles.quickFactsSpan}`}
+                                >
+                                    <Typography
+                                        variant="subtitle1"
+                                        className={styles.sectionTitle}
+                                    >
                                         Quick Facts
                                     </Typography>
                                     <Divider className={styles.divider} />
-                                    <div className={styles.kv}>
-                                        <span>Provider</span>
-                                        <span>
-                                            {state.mission.agencies[0].name}
-                                        </span>
-                                    </div>
-                                    <div className={styles.kv}>
-                                        <span>Rocket</span>
-                                        <span>
-                                            {
-                                                state.rocket.configuration
-                                                    .full_name
-                                            }
-                                        </span>
-                                    </div>
-                                    <div className={styles.kv}>
-                                        <span>Mission Type</span>
-                                        <span>{state.mission.type}</span>
-                                    </div>
-                                    <div className={styles.kv}>
-                                        <span>Orbit</span>
-                                        <span>{state.mission.orbit.name}</span>
-                                    </div>
-                                    <div className={styles.kv}>
-                                        <span>Window Start</span>
-                                        <span>
-                                            {new Date(
-                                                state.window_start
-                                            ).toLocaleString()}
-                                        </span>
-                                    </div>
-                                    <div className={styles.kv}>
-                                        <span>Window End</span>
-                                        <span>
-                                            {new Date(
-                                                state.window_end
-                                            ).toLocaleString()}
-                                        </span>
+                                    <div className={styles.quickFactsInner}>
+                                        <div className={styles.kv}>
+                                            <span>Provider</span>
+                                            <span>
+                                                {
+                                                    state.mission.agencies[0]
+                                                        .name
+                                                }
+                                            </span>
+                                        </div>
+                                        <div className={styles.kv}>
+                                            <span>Rocket</span>
+                                            <span>
+                                                {
+                                                    state.rocket.configuration
+                                                        .full_name
+                                                }
+                                            </span>
+                                        </div>
+                                        <div className={styles.kv}>
+                                            <span>Mission Type</span>
+                                            <span>{state.mission.type}</span>
+                                        </div>
+                                        <div className={styles.kv}>
+                                            <span>Orbit</span>
+                                            <span>
+                                                {state.mission.orbit.name}
+                                            </span>
+                                        </div>
+                                        <div className={styles.kv}>
+                                            <span>Window Start</span>
+                                            <span>
+                                                {new Date(
+                                                    state.window_start
+                                                ).toLocaleString()}
+                                            </span>
+                                        </div>
+                                        <div className={styles.kv}>
+                                            <span>Window End</span>
+                                            <span>
+                                                {new Date(
+                                                    state.window_end
+                                                ).toLocaleString()}
+                                            </span>
+                                        </div>
                                     </div>
                                 </Box>
 
                                 <Box className={styles.sectionCard}>
-                                    <Typography variant="h6">
+                                    <Typography
+                                        variant="subtitle1"
+                                        className={styles.sectionTitle}
+                                    >
                                         Launch Site
                                     </Typography>
                                     <Divider className={styles.divider} />
@@ -212,6 +239,78 @@ export const LaunchDetailPage = () => {
                                         </Link>
                                     </div>
                                 </Box>
+
+                                <Box className={styles.sectionCard}>
+                                    <Typography
+                                        variant="subtitle1"
+                                        className={styles.sectionTitle}
+                                    >
+                                        Agency Information
+                                    </Typography>
+                                    <Divider className={styles.divider} />
+                                    <div className={styles.agencyKvGrid}>
+                                        <div className={styles.kv}>
+                                            <span>Country Code</span>
+                                            <span>
+                                                {state.mission.agencies[0]
+                                                    .country_code || 'N/A'}
+                                            </span>
+                                        </div>
+                                        <div className={styles.kv}>
+                                            <span>Launchers</span>
+                                            <span>
+                                                {state.mission.agencies[0]
+                                                    .launchers || 'N/A'}
+                                            </span>
+                                        </div>
+                                        <div className={styles.kv}>
+                                            <span>Spacecraft</span>
+                                            <span>
+                                                {state.mission.agencies[0]
+                                                    .spacecraft || 'N/A'}
+                                            </span>
+                                        </div>
+                                        <div className={styles.kv}>
+                                            <span>Total Launch Count</span>
+                                            <span>
+                                                {state.mission.agencies[0]
+                                                    .total_launch_count ??
+                                                    'N/A'}
+                                            </span>
+                                        </div>
+                                        <div className={styles.kv}>
+                                            <span>Consecutive Successful</span>
+                                            <span>
+                                                {state.mission.agencies[0]
+                                                    .consecutive_successful_launches ??
+                                                    'N/A'}
+                                            </span>
+                                        </div>
+                                        <div className={styles.kv}>
+                                            <span>Successful Launches</span>
+                                            <span>
+                                                {state.mission.agencies[0]
+                                                    .successful_launches ??
+                                                    'N/A'}
+                                            </span>
+                                        </div>
+                                        <div className={styles.kv}>
+                                            <span>Failed Launches</span>
+                                            <span>
+                                                {state.mission.agencies[0]
+                                                    .failed_launches ?? 'N/A'}
+                                            </span>
+                                        </div>
+                                        <div className={styles.kv}>
+                                            <span>Pending Launches</span>
+                                            <span>
+                                                {state.mission.agencies[0]
+                                                    .pending_launches ??
+                                                    'N/A'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </Box>
                             </div>
                         </div>
                     </div>
@@ -220,67 +319,15 @@ export const LaunchDetailPage = () => {
                 <Divider className={styles.sectionDivider} />
 
                 <div className={styles.moreInfoSection}>
-                    <Box className={styles.sectionCard}>
-                        <Typography variant="h6">Agency Information</Typography>
-                        <Divider className={styles.divider} />
-                        <div className={styles.kv}>
-                            <span>Country Code</span>
-                            <span>
-                                {state.mission.agencies[0].country_code ||
-                                    'N/A'}
-                            </span>
-                        </div>
-                        <div className={styles.kv}>
-                            <span>Launchers</span>
-                            <span>
-                                {state.mission.agencies[0].launchers || 'N/A'}
-                            </span>
-                        </div>
-                        <div className={styles.kv}>
-                            <span>Spacecraft</span>
-                            <span>
-                                {state.mission.agencies[0].spacecraft || 'N/A'}
-                            </span>
-                        </div>
-                        <div className={styles.kv}>
-                            <span>Total Launch Count</span>
-                            <span>
-                                {state.mission.agencies[0].total_launch_count ??
-                                    'N/A'}
-                            </span>
-                        </div>
-                        <div className={styles.kv}>
-                            <span>Consecutive Successful Launches</span>
-                            <span>
-                                {state.mission.agencies[0]
-                                    .consecutive_successful_launches ?? 'N/A'}
-                            </span>
-                        </div>
-                        <div className={styles.kv}>
-                            <span>Successful Launches</span>
-                            <span>
-                                {state.mission.agencies[0]
-                                    .successful_launches ?? 'N/A'}
-                            </span>
-                        </div>
-                        <div className={styles.kv}>
-                            <span>Failed Launches</span>
-                            <span>
-                                {state.mission.agencies[0].failed_launches ??
-                                    'N/A'}
-                            </span>
-                        </div>
-                        <div className={styles.kv}>
-                            <span>Pending Launches</span>
-                            <span>
-                                {state.mission.agencies[0].pending_launches ??
-                                    'N/A'}
-                            </span>
-                        </div>
-                    </Box>
-
-                    <Box className={styles.sectionCard}>
-                        <Typography variant="h6">Mission Overview</Typography>
+                    <Box
+                        className={`${styles.sectionCard} ${!hasWatchItems ? styles.missionFullWidth : ''}`}
+                    >
+                        <Typography
+                            variant="subtitle1"
+                            className={styles.sectionTitle}
+                        >
+                            Mission Overview
+                        </Typography>
                         <Divider className={styles.divider} />
                         <Typography className={styles.missionDescription}>
                             {state.mission.description}
@@ -307,11 +354,14 @@ export const LaunchDetailPage = () => {
                         </div>
                     </Box>
 
-                    {(state.weather_concerns ||
-                        state.holdreason ||
-                        state.failreason) && (
+                    {hasWatchItems && (
                         <Box className={styles.sectionCard}>
-                            <Typography variant="h6">Watch Items</Typography>
+                            <Typography
+                                variant="subtitle1"
+                                className={styles.sectionTitle}
+                            >
+                                Watch Items
+                            </Typography>
                             <Divider className={styles.divider} />
                             {state.weather_concerns && (
                                 <Typography>
