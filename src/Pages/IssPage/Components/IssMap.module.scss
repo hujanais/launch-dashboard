@@ -1,8 +1,25 @@
 .container {
     display: flex;
     flex-direction: column;
-    column-gap: 1rem;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+}
+
+.mapPaper {
+    flex: 1;
+    min-height: min(520px, 65vh);
+    width: 100%;
+    overflow: hidden;
+}
+
+.marker {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #ff5722;
+    border: 2px solid rgba(255, 255, 255, 0.95);
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.35),
+        0 0 14px rgba(255, 87, 34, 0.65);
 }

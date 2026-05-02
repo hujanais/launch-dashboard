@@ -1,5 +1,8 @@
-import { useEffect, useState } from 'react'
-import { useIssHook, type IssResponse } from '../../Api/issApi'
+import { useIssHook } from '../../Api/issApi'
+import {
+    getLatestTiangongPosition,
+    useTiangongHook,
+} from '../../Api/tiangongApi'
 import { IssMap } from './Components/IssMap'
 import styles from './IssPage.module.scss'
 import Typography from '@mui/material/Typography'
@@ -7,22 +10,25 @@ import Box from '@mui/material/Box'
 
 export const IssPage = () => {
     const { issQuery } = useIssHook()
+    const { tiangongQuery } = useTiangongHook()
 
-    const [lastUpdated, setLastUpdated] = useState<number>(0)
-    const [latitude, setLatitude] = useState<number>(0)
-    const [longitude, setLongitude] = useState<number>(0)
+    const issLat = Number(issQuery.data?.iss_position.latitude ?? 0)
+    const issLon = Number(issQuery.data?.iss_position.longitude ?? 0)
 
-    useEffect(() => {
-        // Only add to list when we have data
-        if (issQuery.data) {
-            setLatitude(issQuery.data.iss_position.latitude)
-            setLongitude(issQuery.data.iss_position.longitude)
-            setLastUpdated(Date.now())
-        }
-    }, [issQuery.data])
+    const tiangongLatest = tiangongQuery.data
+        ? getLatestTiangongPosition(tiangongQuery.data)
+        : null
+    const tgLat = tiangongLatest?.latitude ?? 0
+    const tgLon = tiangongLatest?.longitude ?? 0
+
+    const fmt = (t: number) => new Date(t).toLocaleString()
+    const issUpdated = issQuery.dataUpdatedAt ? fmt(issQuery.dataUpdatedAt) : '—'
+    const tgUpdated = tiangongQuery.dataUpdatedAt
+        ? fmt(tiangongQuery.dataUpdatedAt)
+        : '—'
 
     return (
-        <div className={styles.mapContainer}>
+        <div className={styles.mainContainer}>
             <Box
                 sx={{
                     display: 'flex',
@@ -30,10 +36,15 @@ export const IssPage = () => {
                     justifyContent: 'center',
                 }}
             >
-                <Typography variant="h6">Where is the ISS now?</Typography>
+                <Typography variant="h6">ISS and Tiangong</Typography>
             </Box>
-            <div>Last updated: {lastUpdated.toLocaleString()}</div>
-            <IssMap lat={latitude} lon={longitude} />
+            <div>
+                ISS updated: {issUpdated} · Tiangong updated: {tgUpdated}
+            </div>
+            <div className={styles.mapContainer}>
+                <IssMap title="ISS" lat={issLat} lon={issLon} />
+                <IssMap title="Tiangong" lat={tgLat} lon={tgLon} />
+            </div>
         </div>
     )
 }
