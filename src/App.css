@@ -16,3 +16,8 @@
     overflow: hidden;
     position: relative;
 }
+
+.main-content > * {
+    height: 100%;
+    min-height: 0;
+}

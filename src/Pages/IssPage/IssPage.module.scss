@@ -1,7 +1,71 @@
-.mapContainer {
-    display: grid;
-    grid-template-rows: auto auto 1fr;
+.mainContainer {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
+    min-height: 0;
     padding: 1rem;
+    gap: 0.75rem;
+    box-sizing: border-box;
+}
+
+.pageTitle {
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.factsContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    min-width: 0;
+}
+
+@media (max-width: 720px) {
+    .factsContainer {
+        grid-template-columns: 1fr;
+    }
+}
+
+.factAccordion {
+    border-radius: 8px;
+    overflow: hidden;
+
+    &::before {
+        display: none;
+    }
+}
+
+.factAccordionSummary {
+    min-height: 40px !important;
+    padding: 0 10px;
+
+    .MuiAccordionSummary-content {
+        margin: 8px 0;
+    }
+}
+
+.factAccordionDetails {
+    padding: 0 10px 10px !important;
+    max-height: min(16rem, 32vh);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.mapContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+}
+
+@media (max-width: 900px) {
+    .mapContainer {
+        grid-template-columns: 1fr;
+    }
 }

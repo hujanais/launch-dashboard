@@ -5,6 +5,19 @@ export interface LaunchResponse {
     results: LaunchResult[]
 }
 
+// `/launches/upcoming/` and `/launches/previous/` share the same paginated schema.
+export type PreviousLaunchesResponse = LaunchResponse
+
+export interface APIThrottle {
+    your_request_limit: number
+    limit_frequency_secs: number
+    current_use: number
+    next_use_secs: number
+    ident: string
+}
+
+export type APIThrottleResponse = APIThrottle[]
+
 export interface LaunchResult {
     id: string
     url: string
@@ -62,6 +75,7 @@ interface Agency {
     type: string
     featured?: boolean
     country_code?: string
+    country?: AgencyCountry[]
     abbrev?: string
     description?: string
     administrator?: string
@@ -83,6 +97,10 @@ interface Agency {
     logo_url?: string
     image_url?: string
     nation_url?: string
+}
+
+interface AgencyCountry {
+    name: string
 }
 
 interface Rocket {

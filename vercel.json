@@ -1,0 +1,12 @@
+{
+    "rewrites": [
+        {
+            "source": "/api/n2yo/:path*",
+            "destination": "https://api.n2yo.com/:path*"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
+    ]
+}
