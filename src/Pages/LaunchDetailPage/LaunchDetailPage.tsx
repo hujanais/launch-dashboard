@@ -53,6 +53,12 @@ export const LaunchDetailPage = () => {
         return new Date(state.net).toLocaleString()
     }, [state])
 
+    const primaryAgency = state?.mission?.agencies?.[0]
+    const missionInfoUrl = state?.mission?.info_urls?.[0]
+    const missionVideoUrl = state?.mission?.vid_urls?.[0]
+    const padMapUrl = state?.pad?.map_url
+    const padWikiUrl = state?.pad?.wiki_url
+
     const hasWatchItems = Boolean(
         state?.weather_concerns || state?.holdreason || state?.failreason
     )
@@ -161,10 +167,10 @@ export const LaunchDetailPage = () => {
                                         <div className={styles.kv}>
                                             <span>Provider</span>
                                             <span>
-                                                {
-                                                    state.mission.agencies[0]
-                                                        .name
-                                                }
+                                                {primaryAgency?.name ??
+                                                    state.launch_service_provider
+                                                        ?.name ??
+                                                    'N/A'}
                                             </span>
                                         </div>
                                         <div className={styles.kv}>
@@ -178,12 +184,15 @@ export const LaunchDetailPage = () => {
                                         </div>
                                         <div className={styles.kv}>
                                             <span>Mission Type</span>
-                                            <span>{state.mission.type}</span>
+                                            <span>
+                                                {state.mission?.type ?? 'N/A'}
+                                            </span>
                                         </div>
                                         <div className={styles.kv}>
                                             <span>Orbit</span>
                                             <span>
-                                                {state.mission.orbit.name}
+                                                {state.mission?.orbit?.name ??
+                                                    'N/A'}
                                             </span>
                                         </div>
                                         <div className={styles.kv}>
@@ -213,30 +222,36 @@ export const LaunchDetailPage = () => {
                                         Launch Site
                                     </Typography>
                                     <Divider className={styles.divider} />
-                                    <Typography>{state.pad.name}</Typography>
-                                    <Typography className={styles.mutedText}>
-                                        {state.pad.location.name} (
-                                        {state.pad.country_code})
+                                    <Typography>
+                                        {state.pad?.name ?? 'N/A'}
                                     </Typography>
                                     <Typography className={styles.mutedText}>
-                                        {state.pad.latitude},{' '}
-                                        {state.pad.longitude}
+                                        {state.pad?.location?.name ?? 'N/A'} (
+                                        {state.pad?.country_code ?? 'N/A'})
+                                    </Typography>
+                                    <Typography className={styles.mutedText}>
+                                        {state.pad?.latitude ?? 'N/A'},{' '}
+                                        {state.pad?.longitude ?? 'N/A'}
                                     </Typography>
                                     <div className={styles.linkRow}>
-                                        <Link
-                                            href={state.pad.map_url}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            View pad map
-                                        </Link>
-                                        <Link
-                                            href={state.pad.wiki_url}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            Pad wiki
-                                        </Link>
+                                        {padMapUrl && (
+                                            <Link
+                                                href={padMapUrl}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                            >
+                                                View pad map
+                                            </Link>
+                                        )}
+                                        {padWikiUrl && (
+                                            <Link
+                                                href={padWikiUrl}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                            >
+                                                Pad wiki
+                                            </Link>
+                                        )}
                                     </div>
                                 </Box>
 
@@ -252,60 +267,56 @@ export const LaunchDetailPage = () => {
                                         <div className={styles.kv}>
                                             <span>Country Code</span>
                                             <span>
-                                                {state.mission.agencies[0]
-                                                    .country_code || 'N/A'}
+                                                {primaryAgency?.country_code ||
+                                                    'N/A'}
                                             </span>
                                         </div>
                                         <div className={styles.kv}>
                                             <span>Launchers</span>
                                             <span>
-                                                {state.mission.agencies[0]
-                                                    .launchers || 'N/A'}
+                                                {primaryAgency?.launchers ||
+                                                    'N/A'}
                                             </span>
                                         </div>
                                         <div className={styles.kv}>
                                             <span>Spacecraft</span>
                                             <span>
-                                                {state.mission.agencies[0]
-                                                    .spacecraft || 'N/A'}
+                                                {primaryAgency?.spacecraft ||
+                                                    'N/A'}
                                             </span>
                                         </div>
                                         <div className={styles.kv}>
                                             <span>Total Launch Count</span>
                                             <span>
-                                                {state.mission.agencies[0]
-                                                    .total_launch_count ??
+                                                {primaryAgency?.total_launch_count ??
                                                     'N/A'}
                                             </span>
                                         </div>
                                         <div className={styles.kv}>
                                             <span>Consecutive Successful</span>
                                             <span>
-                                                {state.mission.agencies[0]
-                                                    .consecutive_successful_launches ??
+                                                {primaryAgency?.consecutive_successful_launches ??
                                                     'N/A'}
                                             </span>
                                         </div>
                                         <div className={styles.kv}>
                                             <span>Successful Launches</span>
                                             <span>
-                                                {state.mission.agencies[0]
-                                                    .successful_launches ??
+                                                {primaryAgency?.successful_launches ??
                                                     'N/A'}
                                             </span>
                                         </div>
                                         <div className={styles.kv}>
                                             <span>Failed Launches</span>
                                             <span>
-                                                {state.mission.agencies[0]
-                                                    .failed_launches ?? 'N/A'}
+                                                {primaryAgency?.failed_launches ??
+                                                    'N/A'}
                                             </span>
                                         </div>
                                         <div className={styles.kv}>
                                             <span>Pending Launches</span>
                                             <span>
-                                                {state.mission.agencies[0]
-                                                    .pending_launches ??
+                                                {primaryAgency?.pending_launches ??
                                                     'N/A'}
                                             </span>
                                         </div>
@@ -330,21 +341,22 @@ export const LaunchDetailPage = () => {
                         </Typography>
                         <Divider className={styles.divider} />
                         <Typography className={styles.missionDescription}>
-                            {state.mission.description}
+                            {state.mission?.description ??
+                                'Mission details are not available for this launch.'}
                         </Typography>
                         <div className={styles.linkRow}>
-                            {state.mission.info_urls[0] && (
+                            {missionInfoUrl && (
                                 <Link
-                                    href={state.mission.info_urls[0]}
+                                    href={missionInfoUrl}
                                     target="_blank"
                                     rel="noreferrer"
                                 >
                                     Mission info
                                 </Link>
                             )}
-                            {state.mission.vid_urls[0] && (
+                            {missionVideoUrl && (
                                 <Link
-                                    href={state.mission.vid_urls[0]}
+                                    href={missionVideoUrl}
                                     target="_blank"
                                     rel="noreferrer"
                                 >
