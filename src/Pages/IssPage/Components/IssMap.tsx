@@ -236,18 +236,21 @@ function IssMapIss() {
 }
 
 function IssMapTianhe() {
-    const { tianheQuery } = useTianheHook()
+    const { tianheQuery, canFetchTianhe } = useTianheHook()
     const latest = tianheQuery.data
         ? getLatestTianhePosition(tianheQuery.data)
         : null
     const lat = latest?.latitude ?? 0
     const lon = latest?.longitude ?? 0
+    const updatedLabel = !canFetchTianhe
+        ? 'N2YO key missing — set VITE_N2YO_API_KEY to load Tianhe'
+        : formatUpdatedLabel(tianheQuery.dataUpdatedAt)
     return (
         <IssMapInner
             title="Tianhe"
             lat={lat}
             lon={lon}
-            updatedLabel={formatUpdatedLabel(tianheQuery.dataUpdatedAt)}
+            updatedLabel={updatedLabel}
             markerAriaLabel="Tianhe space station module position"
         />
     )

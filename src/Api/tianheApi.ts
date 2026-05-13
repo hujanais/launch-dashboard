@@ -1,7 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 
-const N2YO_API_KEY = import.meta.env.VITE_N2YO_API_KEY
+function getN2yoApiKey(): string {
+    const v = import.meta.env.VITE_N2YO_API_KEY
+    return typeof v === 'string' ? v.trim() : ''
+}
+
 /** NORAD catalog id (example: 25544 = ISS). */
 const NORAD_ID = 48274 // Tianhe core module
 
@@ -55,12 +59,12 @@ export function getLatestTianhePosition(
 
 export const useTianheHook = () => {
     const [isPaused, setIsPaused] = useState(false)
+    const n2yoApiKey = getN2yoApiKey()
+    const canFetchTianhe = n2yoApiKey.length > 0
 
     const fetchTianhe =
         async (): Promise<N2yoSatellitePositionsResponse> => {
-            const apiKey =
-                typeof N2YO_API_KEY === 'string' ? N2YO_API_KEY.trim() : ''
-            if (!apiKey) {
+            if (!n2yoApiKey) {
                 throw new Error('VITE_N2YO_API_KEY is not set')
             }
             const path = [
@@ -71,7 +75,7 @@ export const useTianheHook = () => {
                 POSITION_SAMPLES_SECS,
             ].join('/')
             /** Proxied via Vite (dev/preview) and `vercel.json` so responses are same-origin → no n2yo CORS. */
-            const url = `/api/n2yo/rest/v1/satellite/positions/${path}?apiKey=${encodeURIComponent(apiKey)}`
+            const url = `/api/n2yo/rest/v1/satellite/positions/${path}?apiKey=${encodeURIComponent(n2yoApiKey)}`
             const response = await fetch(url)
             if (!response.ok) {
                 throw new Error(
@@ -84,9 +88,9 @@ export const useTianheHook = () => {
     const tianheQuery = useQuery({
         queryKey: ['tianhe'],
         queryFn: fetchTianhe,
-        refetchInterval: 60000,
-        enabled: !isPaused,
+        refetchInterval: canFetchTianhe ? 60000 : false,
+        enabled: canFetchTianhe && !isPaused,
     })
 
-    return { tianheQuery, isPaused, setIsPaused }
+    return { tianheQuery, isPaused, setIsPaused, canFetchTianhe }
 }
