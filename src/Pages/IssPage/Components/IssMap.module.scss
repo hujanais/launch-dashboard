@@ -13,13 +13,25 @@
     overflow: hidden;
 }
 
+.followBtnActive {
+    border-color: rgba(57, 255, 20, 0.28) !important;
+    color: var(--retro-text-muted) !important;
+    background-color: rgba(57, 255, 20, 0.06) !important;
+
+    &:hover {
+        border-color: rgba(57, 255, 20, 0.38) !important;
+        color: var(--retro-text) !important;
+        background-color: rgba(57, 255, 20, 0.1) !important;
+    }
+}
+
 .marker {
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: #ff5722;
-    border: 2px solid rgba(255, 255, 255, 0.95);
+    background: var(--retro-primary);
+    border: 2px solid rgba(212, 255, 212, 0.95);
     box-shadow:
-        0 0 0 1px rgba(0, 0, 0, 0.35),
-        0 0 14px rgba(255, 87, 34, 0.65);
+        0 0 0 1px rgba(3, 11, 6, 0.5),
+        0 0 14px var(--retro-primary-glow);
 }

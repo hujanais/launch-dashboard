@@ -1,4 +1,4 @@
-import { ThemeProvider, createTheme } from '@mui/material/styles'
+import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import './App.css'
 import HeaderComponents from './Components/HeaderComponents/HeaderComponents'
@@ -9,18 +9,13 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { LaunchDetailPage } from './Pages/LaunchDetailPage/LaunchDetailPage'
 import { LaunchHistoryPage } from './Pages/LaunchHistoryPage/LaunchHistoryPage'
-
-const darkTheme = createTheme({
-    palette: {
-        mode: 'dark',
-    },
-})
+import { retroGreenTheme } from './theme/retroGreenTheme'
 
 const queryClient = new QueryClient()
 
 function App() {
     return (
-        <ThemeProvider theme={darkTheme}>
+        <ThemeProvider theme={retroGreenTheme}>
             <CssBaseline />
             <div className="root">
                 <div className="header">

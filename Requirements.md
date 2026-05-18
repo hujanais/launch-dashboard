@@ -15,3 +15,5 @@ Layout preference: one-column stacked cards (mobile-first minimal) or responsive
 Countdown behavior: when countdown goes below zero, should it display Liftoff/TBD instead of negative time? show negative time is ok.
 LocalStorage policy: should cached data include a timestamp so we can detect stale cache and force re-sync at startup? no, re-sync at startup.
 
+### Bookeeping
+1.  When you are asked to do a git operation, always show the user the commit message and wait for permission before doing the final git push.

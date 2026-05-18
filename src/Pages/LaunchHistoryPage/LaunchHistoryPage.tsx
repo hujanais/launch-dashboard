@@ -379,14 +379,14 @@ export const LaunchHistoryPage = () => {
                                     >
                                         <CartesianGrid
                                             strokeDasharray="3 3"
-                                            stroke="rgba(51, 65, 85, 0.45)"
+                                            stroke="rgba(57, 255, 20, 0.12)"
                                             vertical={false}
                                         />
                                         <XAxis
                                             dataKey="name"
-                                            stroke="#475569"
+                                            stroke="rgba(90, 143, 106, 0.7)"
                                             tick={{
-                                                fill: '#94a3b8',
+                                                fill: '#94b89e',
                                                 fontSize: 10,
                                             }}
                                             angle={-32}
@@ -394,29 +394,35 @@ export const LaunchHistoryPage = () => {
                                             interval={0}
                                             height={68}
                                             tickMargin={10}
-                                            tickLine={{ stroke: '#475569' }}
+                                            tickLine={{
+                                                stroke: 'rgba(90, 143, 106, 0.7)',
+                                            }}
                                         />
                                         <YAxis
                                             allowDecimals={false}
-                                            stroke="#475569"
+                                            stroke="rgba(90, 143, 106, 0.7)"
                                             tick={{
-                                                fill: '#94a3b8',
+                                                fill: '#94b89e',
                                                 fontSize: 11,
                                             }}
-                                            tickLine={{ stroke: '#475569' }}
-                                            axisLine={{ stroke: '#475569' }}
+                                            tickLine={{
+                                                stroke: 'rgba(90, 143, 106, 0.7)',
+                                            }}
+                                            axisLine={{
+                                                stroke: 'rgba(90, 143, 106, 0.7)',
+                                            }}
                                             label={{
                                                 value: 'Launches',
                                                 angle: -90,
                                                 position: 'insideLeft',
                                                 offset: 8,
-                                                fill: '#64748b',
+                                                fill: '#5a8f6a',
                                                 fontSize: 11,
                                             }}
                                         />
                                         <Tooltip
                                             cursor={{
-                                                fill: 'rgba(30, 41, 59, 0.35)',
+                                                fill: 'rgba(57, 255, 20, 0.06)',
                                             }}
                                             content={({ active, payload }) => {
                                                 if (!active || !payload?.length)
@@ -501,14 +507,14 @@ export const LaunchHistoryPage = () => {
                                             dataKey="success"
                                             name="Success"
                                             stackId="stack"
-                                            fill="#34d399"
+                                            fill="var(--retro-chart-success)"
                                             radius={[0, 0, 0, 0]}
                                         />
                                         <Bar
                                             dataKey="failures"
                                             name="Failures"
                                             stackId="stack"
-                                            fill="#fb7185"
+                                            fill="var(--retro-chart-failure)"
                                             radius={[4, 4, 0, 0]}
                                         />
                                     </BarChart>

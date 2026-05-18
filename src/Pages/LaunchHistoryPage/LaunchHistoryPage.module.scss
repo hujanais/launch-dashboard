@@ -11,13 +11,8 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    background: radial-gradient(
-            ellipse 140% 80% at 50% -20%,
-            rgba(30, 58, 138, 0.22),
-            transparent 55%
-        ),
-        #0b1020;
-    color: #e2e8f0;
+    background: var(--retro-gradient), var(--retro-bg);
+    color: var(--retro-text);
     overflow: hidden;
     padding: 0.75rem 0.85rem;
 }
@@ -28,7 +23,7 @@
     flex-direction: column;
     gap: 0.35rem;
     padding-bottom: 0.45rem;
-    border-bottom: 1px solid rgba(30, 41, 59, 0.85);
+    border-bottom: 1px solid var(--retro-border-strong);
 }
 
 .topBarRow {
@@ -49,7 +44,7 @@
     letter-spacing: 0.26em !important;
     font-size: 0.62rem !important;
     font-weight: 600 !important;
-    color: #64748b !important;
+    color: var(--retro-text-dim) !important;
     line-height: 1.2 !important;
 }
 
@@ -57,12 +52,12 @@
     font-weight: 600 !important;
     letter-spacing: -0.03em !important;
     font-size: 1.25rem !important;
-    color: #f1f5f9 !important;
+    color: var(--retro-text-bright) !important;
     line-height: 1.15 !important;
 }
 
 .refreshBtn {
-    color: #94a3b8 !important;
+    color: var(--retro-text-muted) !important;
     border: 1px solid transparent;
     transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
 }
@@ -73,9 +68,9 @@
 }
 
 .refreshBtn:hover:not(:disabled) {
-    color: #e2e8f0 !important;
-    border-color: rgba(51, 65, 85, 0.9);
-    background: rgba(15, 23, 42, 0.5) !important;
+    color: var(--retro-text) !important;
+    border-color: var(--retro-border-strong);
+    background: var(--retro-surface) !important;
 }
 
 .refreshSpinning {
@@ -83,7 +78,7 @@
 }
 
 .metaLine {
-    color: #94a3b8 !important;
+    color: var(--retro-text-muted) !important;
     font-size: 0.78rem !important;
     line-height: 1.3 !important;
 }
@@ -127,10 +122,11 @@
     display: flex;
     flex-direction: column;
     border-radius: 12px;
-    border: 1px solid rgba(51, 65, 85, 0.55);
-    background: rgba(15, 23, 42, 0.45);
+    border: 1px solid var(--retro-border);
+    background: var(--retro-surface);
     padding: 0.5rem 0.5rem 0.35rem;
     overflow: hidden;
+    box-shadow: var(--retro-shadow-inset);
 }
 
 .chartEmpty {
@@ -142,7 +138,7 @@
 }
 
 .chartEmptyText {
-    color: #64748b !important;
+    color: var(--retro-text-dim) !important;
     letter-spacing: 0.06em !important;
     font-size: 0.72rem !important;
 }
@@ -158,45 +154,45 @@
     padding: 0 0.35rem !important;
     font-size: 0.62rem !important;
     letter-spacing: 0.06em !important;
-    color: #64748b !important;
+    color: var(--retro-text-dim) !important;
     text-transform: uppercase;
 }
 
 .chartTooltip {
     padding: 0.45rem 0.55rem;
     border-radius: 8px;
-    background: rgba(15, 23, 42, 0.95);
-    border: 1px solid rgba(51, 65, 85, 0.95);
-    color: #e2e8f0;
+    background: var(--retro-surface-solid);
+    border: 1px solid var(--retro-border-strong);
+    color: var(--retro-text);
     font-size: 0.72rem;
     line-height: 1.45;
 }
 
 .chartTooltipTitle {
     font-weight: 600;
-    color: #f1f5f9;
+    color: var(--retro-text-bright);
     margin-bottom: 0.35rem;
     max-width: 220px;
     word-break: break-word;
 }
 
 .chartTooltipRow {
-    color: #cbd5e1;
+    color: var(--retro-text);
 }
 
 .chartTooltipRowMuted {
-    color: #64748b;
+    color: var(--retro-text-dim);
     margin-bottom: 0.2rem;
     font-size: 0.66rem;
 }
 
 .chartTooltipOk {
-    color: #34d399;
+    color: var(--retro-chart-success);
     font-weight: 600;
 }
 
 .chartTooltipFail {
-    color: #fb7185;
+    color: var(--retro-chart-failure);
     font-weight: 600;
 }
 
@@ -219,8 +215,9 @@
     min-height: 0;
     overflow: auto;
     border-radius: 12px;
-    border: 1px solid rgba(51, 65, 85, 0.55);
-    background: rgba(15, 23, 42, 0.45);
+    border: 1px solid var(--retro-border);
+    background: var(--retro-surface);
+    box-shadow: var(--retro-shadow-inset);
 }
 
 .tableContainer :global(.MuiTable-root) {
@@ -228,21 +225,21 @@
 }
 
 .tableContainer :global(.MuiTableCell-root) {
-    color: #cbd5e1;
-    border-bottom: 1px solid rgba(51, 65, 85, 0.42);
+    color: var(--retro-text);
+    border-bottom: 1px solid var(--retro-border);
 }
 
 .tableContainer :global(.MuiTableCell-head) {
-    color: #94a3b8;
+    color: var(--retro-text-muted);
     font-weight: 600;
     letter-spacing: 0.05em;
     text-transform: uppercase;
     font-size: 0.68rem;
-    background: rgba(15, 23, 42, 0.95);
+    background: var(--retro-surface-solid);
 }
 
 .tableContainer :global(.MuiTableRow-root:hover) {
-    background: rgba(30, 41, 59, 0.35);
+    background: var(--retro-surface-hover);
 }
 
 .tableContainer::-webkit-scrollbar {
@@ -251,6 +248,6 @@
 }
 
 .tableContainer::-webkit-scrollbar-thumb {
-    background: rgba(51, 65, 85, 0.8);
+    background: var(--retro-border-strong);
     border-radius: 3px;
 }

@@ -149,9 +149,10 @@ const IssMapInner = ({
                     Center {title}
                 </Button>
                 <Button
-                    variant={followIss ? 'contained' : 'outlined'}
+                    variant="outlined"
                     size="small"
-                    color={followIss ? 'primary' : 'inherit'}
+                    color="inherit"
+                    className={followIss ? styles.followBtnActive : undefined}
                     onClick={() => {
                         setFollowIss((v) => {
                             const next = !v
@@ -199,7 +200,7 @@ const IssMapInner = ({
                                 id="iss-trail-line"
                                 type="line"
                                 paint={{
-                                    'line-color': '#ffab40',
+                                    'line-color': '#39ff14',
                                     'line-width': 3,
                                     'line-opacity': 0.9,
                                 }}
