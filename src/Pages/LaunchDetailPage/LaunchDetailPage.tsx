@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import type { LaunchResult } from '../../models/launch_model'
+import {
+    getLaunchImageUrl,
+    type LaunchResult,
+} from '../../models/launch_model'
 import styles from './LaunchDetailPage.module.scss'
 import { ArrowBack } from '@mui/icons-material'
 import { Box, Button, Chip, Divider, Link, Typography } from '@mui/material'
@@ -77,7 +80,7 @@ export const LaunchDetailPage = () => {
                     <Button
                         variant="contained"
                         startIcon={<ArrowBack />}
-                        onClick={() => navigate('/')}
+                        onClick={() => navigate('/launch')}
                     >
                         Back to launches
                     </Button>
@@ -124,7 +127,7 @@ export const LaunchDetailPage = () => {
                 <div className={styles.previewRows}>
                     <div className={styles.previewRow}>
                         <img
-                            src={state.image}
+                            src={getLaunchImageUrl(state.image)}
                             alt={state.name}
                             className={styles.previewImage}
                         />

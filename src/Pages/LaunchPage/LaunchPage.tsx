@@ -7,21 +7,57 @@ import type { LaunchResponse } from '../../models/launch_model'
 import { LaunchCard } from './Components/LaunchCardComponent/LaunchCard'
 import { LaunchTimeline } from './Components/LaunchTimeline/LaunchTimeline'
 import { fetchUpcomingLaunches } from '../../Api/launchApi'
+import {
+    isTimedLocalStorageCache,
+    shouldRehydrateLocalStorageCache,
+    type TimedLocalStorageCache,
+} from '../../utils/launchLocalStorageCache'
+
+const UPCOMING_LAUNCHES_CACHE_KEY = 'launches'
+
+const EMPTY_LAUNCH_RESPONSE: LaunchResponse = {
+    count: 0,
+    next: null,
+    previous: null,
+    results: [],
+}
+
+const getCachedUpcomingLaunches = (): TimedLocalStorageCache<LaunchResponse> | null => {
+    const cachedValue = localStorage.getItem(UPCOMING_LAUNCHES_CACHE_KEY)
+    if (!cachedValue) return null
+
+    try {
+        const parsed: unknown = JSON.parse(cachedValue)
+        if (isTimedLocalStorageCache(parsed)) {
+            return parsed as TimedLocalStorageCache<LaunchResponse>
+        }
+
+        if (
+            typeof parsed === 'object' &&
+            parsed !== null &&
+            'results' in parsed &&
+            Array.isArray((parsed as LaunchResponse).results)
+        ) {
+            return {
+                data: parsed as LaunchResponse,
+                lastUpdated: '',
+            }
+        }
+    } catch {
+        return null
+    }
+
+    return null
+}
 
 export const LaunchPage = () => {
-    const [launches, setLaunches] = useState<LaunchResponse>(() => {
-        const cachedLaunches = localStorage.getItem('launches')
-        if (cachedLaunches) {
-            return JSON.parse(cachedLaunches)
-        }
-
-        return {
-            count: 0,
-            next: null,
-            previous: null,
-            results: [],
-        }
-    })
+    const cachedPayload = getCachedUpcomingLaunches()
+    const [launches, setLaunches] = useState<LaunchResponse>(
+        cachedPayload?.data ?? EMPTY_LAUNCH_RESPONSE
+    )
+    const [lastUpdated, setLastUpdated] = useState<string | null>(
+        cachedPayload?.lastUpdated || null
+    )
     const [isRefreshing, setIsRefreshing] = useState(false)
     const navigate = useNavigate()
     const nextLaunch = launches.results[0]
@@ -43,8 +79,17 @@ export const LaunchPage = () => {
         try {
             const page = 0
             const launchResponse = await fetchUpcomingLaunches(page)
+            const updatedAt = new Date().toISOString()
+
             setLaunches(launchResponse)
-            localStorage.setItem('launches', JSON.stringify(launchResponse))
+            setLastUpdated(updatedAt)
+            localStorage.setItem(
+                UPCOMING_LAUNCHES_CACHE_KEY,
+                JSON.stringify({
+                    data: launchResponse,
+                    lastUpdated: updatedAt,
+                } satisfies TimedLocalStorageCache<LaunchResponse>)
+            )
         } finally {
             setIsRefreshing(false)
         }
@@ -54,6 +99,12 @@ export const LaunchPage = () => {
         const launchObj = launches.results.find((launch) => launch.id === id)
         navigate('/launch-detail', { state: launchObj })
     }
+
+    useEffect(() => {
+        if (shouldRehydrateLocalStorageCache(lastUpdated)) {
+            void getLaunches()
+        }
+    }, [])
 
     useEffect(() => {
         const timerObj = setInterval(() => {

@@ -18,6 +18,26 @@ export interface APIThrottle {
 
 export type APIThrottleResponse = APIThrottle[]
 
+export interface LaunchImage {
+    id: number
+    name: string
+    image_url: string
+    thumbnail_url: string
+    credit: string | null
+}
+
+export function getLaunchImageUrl(
+    image: LaunchImage | string | null | undefined,
+    options?: { thumbnail?: boolean }
+): string | undefined {
+    if (!image) return undefined
+    if (typeof image === 'string') return image
+    if (options?.thumbnail) {
+        return image.thumbnail_url ?? image.image_url
+    }
+    return image.image_url ?? image.thumbnail_url
+}
+
 export interface LaunchResult {
     id: string
     url: string
@@ -40,7 +60,7 @@ export interface LaunchResult {
     mission: Mission
     pad: Pad
     webcast_live: boolean
-    image: string
+    image: LaunchImage | string | null
     infographic: string | null
     program: Program[]
     orbital_launch_attempt_count: number

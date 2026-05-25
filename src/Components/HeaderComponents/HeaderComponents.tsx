@@ -11,10 +11,10 @@ const HeaderComponents = () => {
                         Space Vibe
                     </Typography>
                     <Box sx={{ typography: 'body1', ml: 2 }}>
-                        <Button href="/iss">Space Stations</Button>
-                        <Button href="/nasa">Nasa</Button>
                         <Button href="/launch">Launch</Button>
                         <Button href="/launch-history">Launch History</Button>
+                        <Button href="/iss">Space Stations</Button>
+                        <Button href="/nasa">NASA</Button>
                     </Box>
                 </Toolbar>
             </AppBar>

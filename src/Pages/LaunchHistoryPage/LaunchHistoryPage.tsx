@@ -12,7 +12,7 @@ import {
     Typography,
 } from '@mui/material'
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
     Bar,
     BarChart,
@@ -32,6 +32,7 @@ import type {
     LaunchResult,
     PreviousLaunchesResponse,
 } from '../../models/launch_model'
+import { shouldRehydrateLocalStorageCache } from '../../utils/launchLocalStorageCache'
 
 type AgencyHistory = {
     groupKey: string
@@ -261,6 +262,12 @@ export const LaunchHistoryPage = () => {
             setIsRefreshing(false)
         }
     }
+
+    useEffect(() => {
+        if (shouldRehydrateLocalStorageCache(lastUpdated)) {
+            void refreshLaunchHistory()
+        }
+    }, [])
 
     return (
         <div className={styles.scrollableContainer}>

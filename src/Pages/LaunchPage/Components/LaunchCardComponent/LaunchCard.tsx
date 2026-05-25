@@ -1,4 +1,7 @@
-import type { LaunchResult } from '../../../../models/launch_model'
+import {
+    getLaunchImageUrl,
+    type LaunchResult,
+} from '../../../../models/launch_model'
 import styles from './LaunchCard.module.scss'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
@@ -33,7 +36,7 @@ export const LaunchCard = ({
                     minWidth: '72px',
                     flex: '0 0 72px',
                 }}
-                image={launch.image}
+                src={getLaunchImageUrl(launch.image, { thumbnail: true })}
                 alt={launch.name}
             />
             <div className={styles.content}>

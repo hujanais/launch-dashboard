@@ -5,7 +5,7 @@ import HeaderComponents from './Components/HeaderComponents/HeaderComponents'
 import { IssPage } from './Pages/IssPage/IssPage'
 import { LaunchPage } from './Pages/LaunchPage/LaunchPage'
 import { NasaPage } from './Pages/NasaPage/NasaPage'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { LaunchDetailPage } from './Pages/LaunchDetailPage/LaunchDetailPage'
 import { LaunchHistoryPage } from './Pages/LaunchHistoryPage/LaunchHistoryPage'
@@ -25,6 +25,10 @@ function App() {
                     <QueryClientProvider client={queryClient}>
                         <BrowserRouter>
                             <Routes>
+                                <Route
+                                    path="/"
+                                    element={<Navigate to="/launch" replace />}
+                                />
                                 <Route
                                     path="/launch"
                                     element={<LaunchPage />}
